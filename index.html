@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ajiwau — Belajar Bahasa Jepang</title>
+  <meta name="description"
+    content="Ajiwau — Platform belajar Bahasa Jepang yang menyenangkan dan terstruktur. Menikmati setiap langkah belajar.">
+  <link rel="stylesheet" href="css/index.css" />
+  <style>
+    /* ── Landing Page ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 40px 24px 80px;
+    }
+
+    /* Radial glow backgrounds */
+    .glow-top {
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124, 109, 247, 0.09) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .glow-bottom {
+      position: absolute;
+      bottom: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 113, 133, 0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Falling kana canvas */
+    #kana-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.12;
+    }
+
+    /* Divider line */
+    .hero-divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+      margin: 24px auto;
+    }
+
+    /* Main logo / name */
+    .hero-logo {
+      font-family: var(--font-jp-serif);
+      font-size: clamp(4rem, 11vw, 8rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-gold) 0%, #a594fa 60%, var(--accent-sakura) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 10px;
+      animation: fadeInUp 0.7s ease both;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 4px 24px rgba(124, 109, 247, 0.18));
+    }
+
+    .hero-name-en {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      opacity: 0.65;
+      margin-bottom: 36px;
+      animation: fadeInUp 0.7s ease 0.1s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-secondary);
+      max-width: 420px;
+      line-height: 1.8;
+      margin-bottom: 8px;
+      animation: fadeInUp 0.7s ease 0.2s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-tagline-jp {
+      font-family: var(--font-jp-serif);
+      font-size: clamp(0.85rem, 1.6vw, 1rem);
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      animation: fadeInUp 0.7s ease 0.3s both;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.7s ease 0.4s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Feature mini-cards */
+    .hero-features {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 64px;
+      animation: fadeInUp 0.7s ease 0.5s both;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(124, 109, 247, 0.13);
+      border-radius: var(--radius-md);
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      white-space: nowrap;
+      box-shadow: 0 2px 12px rgba(124, 109, 247, 0.06);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all var(--transition);
+    }
+
+    .feature-pill:hover {
+      border-color: rgba(124, 109, 247, 0.25);
+      box-shadow: 0 4px 20px rgba(124, 109, 247, 0.10);
+      transform: translateY(-2px);
+    }
+
+    .feature-pill-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fadeIn 1s ease 1s both;
+      z-index: 1;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--accent-gold), transparent);
+      opacity: 0.5;
+      animation: scrollPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scaleY(1);
+      }
+
+      50% {
+        opacity: 0.8;
+        transform: scaleY(1.15);
+      }
+    }
+
+    /* ── About Strip ── */
+    .about-strip {
+      padding: 96px 0;
+      position: relative;
+    }
+
+    .about-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      opacity: 0.8;
+      margin-bottom: 16px;
+    }
+
+    .about-eyebrow::before,
+    .about-eyebrow::after {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent-gold);
+      opacity: 0.4;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 680px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-card {
+      padding: 32px 28px;
+      background: rgba(255, 255, 255, 0.80);
+      border: 1px solid rgba(124, 109, 247, 0.10);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all var(--transition);
+      box-shadow: 0 2px 16px rgba(124, 109, 247, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .about-card:hover {
+      border-color: rgba(124, 109, 247, 0.22);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(124, 109, 247, 0.13);
+    }
+
+    .about-card:hover::before {
+      opacity: 1;
+    }
+
+    .about-card.card-violet::before {
+      background: linear-gradient(90deg, #7c6df7, #a594fa);
+    }
+
+    .about-card.card-rose::before {
+      background: linear-gradient(90deg, #fb7185, #f472b6);
+    }
+
+    .about-card.card-teal::before {
+      background: linear-gradient(90deg, #34d399, #60a5fa);
+    }
+
+    .about-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 18px;
+    }
+
+    .card-violet .about-icon-wrap {
+      background: rgba(124, 109, 247, 0.10);
+    }
+
+    .card-rose .about-icon-wrap {
+      background: rgba(251, 113, 133, 0.10);
+    }
+
+    .card-teal .about-icon-wrap {
+      background: rgba(52, 211, 153, 0.10);
+    }
+
+    .about-num {
+      position: absolute;
+      top: 20px;
+      right: 22px;
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      opacity: 0.04;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .about-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .about-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── CTA Footer Strip ── */
+    .cta-strip {
+      padding: 80px 0 96px;
+      text-align: center;
+    }
+
+    .cta-inner {
+      position: relative;
+      padding: 64px 48px;
+      max-width: 680px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(124, 109, 247, 0.08) 0%, rgba(251, 113, 133, 0.06) 100%);
+      border: 1px solid rgba(124, 109, 247, 0.14);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 8px 48px rgba(124, 109, 247, 0.09), 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+      overflow: hidden;
+    }
+
+    .cta-watermark {
+      position: absolute;
+      bottom: -20px;
+      right: -10px;
+      font-family: var(--font-jp-serif);
+      font-size: 10rem;
+      color: var(--accent-gold);
+      opacity: 0.04;
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .cta-inner h2 {
+      font-family: var(--font-jp-serif);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-inner p {
+      margin-bottom: 32px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-inner .btn {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--border-glass);
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    .site-footer p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .site-footer span {
+      color: var(--accent-sakura);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="nav" id="main-nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        味わう
+        <span>Ajiwau</span>
+      </a>
+      <button id="btn-nav-start" class="btn btn-sm btn-primary" onclick="navigateTo('chapters.html')">
+        Mulai Belajar
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="kana-canvas"></canvas>
+    <div class="glow-top"></div>
+    <div class="glow-bottom"></div>
+
+    <div class="badge badge-sakura animate-in" style="margin-bottom: 24px; position:relative; z-index:1;">
+      🌸 Platform Belajar Bahasa Jepang
+    </div>
+
+    <h1 class="hero-logo">味わう</h1>
+    <div class="hero-name-en">Ajiwau</div>
+
+    <p class="hero-tagline">Menikmati setiap langkah belajar Bahasa Jepang.</p>
+    <p class="hero-tagline-jp">日本語を、一歩一歩たのしく。</p>
+
+    <div class="hero-cta">
+      <button id="btn-hero-start" class="btn btn-primary" onclick="navigateTo('chapters.html')">
+        ✦ Mulai Belajar
+      </button>
+      <button class="btn btn-ghost"
+        onclick="document.querySelector('.about-strip').scrollIntoView({behavior:'smooth'})">
+        Pelajari Lebih Lanjut
+      </button>
+    </div>
+
+    <div class="hero-features">
+      <div class="feature-pill"><span class="feature-pill-icon">📖</span> Terstruktur &amp; Bertahap</div>
+      <div class="feature-pill"><span class="feature-pill-icon">✍️</span> Kuis Interaktif</div>
+      <div class="feature-pill"><span class="feature-pill-icon">🎴</span> Dengan Huruf Jepang</div>
+      <div class="feature-pill"><span class="feature-pill-icon">🆓</span> Gratis Selamanya</div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <span class="scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <section class="about-strip">
+    <div class="container">
+      <div style="text-align:center; margin-bottom: 56px;" class="animate-in">
+        <div class="about-eyebrow">Kenapa Ajiwau?</div>
+        <h2>Belajar yang Menyenangkan,<br>Bukan Membebani</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-card card-violet animate-in animate-in-delay-1">
+          <span class="about-num">01</span>
+          <div class="about-icon-wrap">🗺️</div>
+          <h3>Peta Belajar Jelas</h3>
+          <p>Kurikulum terstruktur dari dasar hingga mahir. Anda dapat mengetahui posisi belajar saat ini dan langkah selanjutnya.</p>
+        </div>
+        <div class="about-card card-rose animate-in animate-in-delay-2">
+          <span class="about-num">02</span>
+          <div class="about-icon-wrap">⚡</div>
+          <h3>Langsung Latihan</h3>
+          <p>Setiap pelajaran diakhiri kuis interaktif agar materi langsung melekat, tidak hanya dibaca.</p>
+        </div>
+        <div class="about-card card-teal animate-in animate-in-delay-3">
+          <span class="about-num">03</span>
+          <div class="about-icon-wrap">🌸</div>
+          <h3>Desain Menyenangkan</h3>
+          <p>Antarmuka yang indah dan nyaman membuat Anda nyaman belajar lebih lama.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA STRIP -->
+  <section class="cta-strip">
+    <div class="container">
+      <div class="cta-inner animate-in">
+        <span class="cta-watermark">始</span>
+        <h2>始めましょう！</h2>
+        <p>Mulailah perjalanan belajar Bahasa Jepang Anda sekarang.<br>Pelajaran pertama sudah menunggu.</p>
+        <button id="btn-cta-start" class="btn btn-primary" style="font-size:1rem; padding:15px 36px;"
+          onclick="navigateTo('chapters.html')">
+          ✦ Mulai Sekarang
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Dibuat dengan <span>♥</span> · Ajiwau · 味わう · 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // ── Nav scroll shadow ──
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        nav.style.boxShadow = '0 4px 24px rgba(124,109,247,0.10)';
+      } else {
+        nav.style.boxShadow = 'none';
+      }
+    });
+
+    // ── Kana Rain Canvas (light theme — soft violet) ──
+    (function () {
+      const canvas = document.getElementById('kana-canvas');
+      const ctx = canvas.getContext('2d');
+      const kana = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン日本語学生先生';
+
+      let W, H, drops, fontSize = 18, cols;
+
+      function resize() {
+        const parent = canvas.parentElement;
+        W = canvas.width = parent.offsetWidth;
+        H = canvas.height = parent.offsetHeight;
+        cols = Math.floor(W / fontSize);
+        drops = new Array(cols).fill(1);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function draw() {
+        ctx.fillStyle = 'rgba(251,249,255, 0.08)';
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#7c6df7';
+        ctx.font = `${fontSize}px 'Noto Sans JP', serif`;
+
+        drops.forEach((y, i) => {
+          const ch = kana[Math.floor(Math.random() * kana.length)];
+          ctx.fillText(ch, i * fontSize, y * fontSize);
+          if (y * fontSize > H && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        });
+      }
+
+      setInterval(draw, 90);
+    })();
+
+    // ── Scroll-triggered animations ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.about-card, .cta-inner').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(28px)';
+      el.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
+      observer.observe(el);
+    });
+  </script>
+</body>
+
+</html>

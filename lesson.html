@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pelajaran — Ajiwau</title>
+    <meta name="description"
+        content="Pelajaran interaktif Bahasa Jepang di Ajiwau. Belajar, pahami, dan uji kemampuan Anda.">
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/lesson.css" />
+</head>
+
+<body>
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="container">
+            <div class="lesson-nav-inner">
+                <button class="back-btn" id="back-btn" onclick="navigateTo('chapters.html')">
+                    ← Kembali
+                </button>
+                <span class="nav-logo" style="font-size:1.1rem; margin-left: auto;">
+                    味わう
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="lesson-bg-glow"></div>
+
+    <main class="lesson-page">
+        <div class="container">
+
+            <!-- Hero -->
+            <div class="lesson-hero">
+                <div class="lesson-overline" id="lesson-chapter-label">Bab 1: Fondasi Dasar</div>
+                <div class="lesson-title-wrap">
+                    <h1 id="lesson-main-title">Partikel Wa & Desu</h1>
+                    <span class="lesson-title-jp" id="lesson-title-jp">は・です</span>
+                </div>
+                <div class="lesson-meta-row">
+                    <span class="badge badge-gold">✦ Tersedia</span>
+                    <span style="font-size:0.8rem; color:var(--text-muted);">⏱ <span id="lesson-duration">~10
+                            menit</span></span>
+                </div>
+            </div>
+
+            <!-- Introduction -->
+            <div class="lesson-section animate-in" style="margin-bottom:24px;">
+                <div class="section-label">Pendahuluan</div>
+                <div class="section-body" id="lesson-intro"></div>
+            </div>
+
+            <!-- Two-column layout -->
+            <div class="lesson-layout">
+
+                <!-- Left: Lesson content -->
+                <div class="lesson-content-col" id="lesson-content">
+                    <!-- Sections rendered by JS -->
+                </div>
+
+                <!-- Right: Sidebar -->
+                <aside class="lesson-sidebar">
+                    <!-- Progress card -->
+                    <div class="sidebar-card">
+                        <h3>📊 Progres Kuis</h3>
+                        <div class="lesson-progress-track">
+                            <div class="lesson-progress-fill" id="lesson-progress-fill" style="width:0%"></div>
+                        </div>
+                        <div class="lesson-progress-text">
+                            <span id="lesson-progress-count">0/25 soal</span>
+                            <span id="lesson-progress-pct">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Outline card -->
+                    <div class="sidebar-card">
+                        <h3>📋 Daftar Isi</h3>
+                        <ul class="outline-list" id="outline-list">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+
+                    <!-- Quick tip -->
+                    <div class="sidebar-card">
+                        <h3>💡 Tips Belajar</h3>
+                        <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.65;">
+                            Coba ucapkan setiap contoh kalimat dengan suara keras. Ini membantu otak menyimpan pola
+                            kalimat lebih cepat!
+                        </p>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Quiz Section -->
+            <div class="quiz-section">
+                <div class="quiz-header">
+                    <span class="badge badge-gold">🎯 Kuis Penilaian</span>
+                    <h2>Uji Pemahaman Anda</h2>
+                    <p>Jawab semua soal berikut untuk menyelesaikan pelajaran ini.</p>
+                </div>
+
+                <!-- Quiz progress bar -->
+                <div class="quiz-progress-wrap">
+                    <div class="quiz-progress-header">
+                        <span>Soal <span id="quiz-current">1</span> dari <span id="quiz-total">5</span></span>
+                        <span id="quiz-answered-count"></span>
+                    </div>
+                    <div class="quiz-track">
+                        <div class="quiz-fill" id="quiz-fill" style="width: 20%"></div>
+                    </div>
+                </div>
+
+                <!-- Quiz questions (rendered by JS) -->
+                <div id="quiz-inner"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/lesson.js"></script>
+    <script>
+        // Set chapter label from URL param
+        document.addEventListener('DOMContentLoaded', () => {
+            const id = getParam('id');
+            if (id && APP_DATA.lessons[id]) {
+                document.getElementById('lesson-chapter-label').textContent = APP_DATA.lessons[id].chapterTitle;
+                document.getElementById('lesson-duration').textContent = APP_DATA.lessons[id].duration;
+                document.title = APP_DATA.lessons[id].title + ' — Ajiwau';
+            }
+        });
+    </script>
+</body>
+
+</html>
